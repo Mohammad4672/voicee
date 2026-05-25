@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ruba Message</title>
+
+<style>
+body {
+  margin: 0;
+  overflow: hidden;
+  font-family: Arial;
+  text-align: center;
+  color: white;
+
+  background: radial-gradient(circle at top, #1a2a4a 0%, #0b1020 60%, #070812 100%);
+}
+
+/* START BUTTON */
+#startBtn {
+  position: absolute;
+  top: 45%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 15px 25px;
+  font-size: 18px;
+  border: none;
+  border-radius: 12px;
+  background: white;
+  color: black;
+  cursor: pointer;
+}
+
+/* MAIN GLOW TEXT */
+#loveText {
+  position: absolute;
+  top: 45%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 70px;
+  font-weight: bold;
+  display: none;
+  color: #ff4d6d;
+
+  text-shadow: 0 0 10px #ff4d6d, 0 0 20px #ff4d6d, 0 0 40px #ff4d6d;
+  animation: glowPulse 1.5s infinite;
+}
+
+@keyframes glowPulse {
+  0% { transform: translate(-50%, -50%) scale(0.95); opacity: 0.6; }
+  50% { transform: translate(-50%, -50%) scale(1.1); opacity: 1; }
+  100% { transform: translate(-50%, -50%) scale(0.95); opacity: 0.6; }
+}
+
+/* RAIN TEXT */
+.rain {
+  position: absolute;
+  top: -50px;
+  font-size: 28px;
+  font-weight: bold;
+  color: rgba(255,255,255,0.85);
+  animation: fall linear forwards;
+  pointer-events: none;
+}
+
+@keyframes fall {
+  to {
+    transform: translateY(110vh);
+    opacity: 0;
+  }
+}
+
+/* BOX */
+#box {
+  display: none;
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 100px;
+  cursor: pointer;
+}
+
+/* HEARTS */
+.heart {
+  position: absolute;
+  font-size: 25px;
+  animation: floatUp 3s linear forwards;
+}
+
+@keyframes floatUp {
+  from { transform: translateY(0); opacity: 1; }
+  to { transform: translateY(-400px); opacity: 0; }
+}
+
+/* FINAL TEXT */
+#finalText {
+  position: absolute;
+  width: 100%;
+  top: 45%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 65px;
+  font-weight: bold;
+  display: none;
+  color: red;
+  text-shadow: 0 0 20px red, 0 0 40px red;
+}
+</style>
+</head>
+
+<body>
+
+<button id="startBtn">📩 Open Message</button>
+
+<audio id="audio" src="voice.mp3"></audio>
+
+<div id="loveText">Ruba ❤️</div>
+<div id="box">🎁</div>
+<div id="finalText">بحبك ❤️</div>
+
+<script>
+const audio = document.getElementById("audio");
+const startBtn = document.getElementById("startBtn");
+const loveText = document.getElementById("loveText");
+const box = document.getElementById("box");
+const finalText = document.getElementById("finalText");
+
+let finished = false;
+
+/* RAIN EFFECT (Ruba falling like snow) */
+function createRain() {
+  for (let i = 0; i < 25; i++) {
+    let r = document.createElement("div");
+    r.className = "rain";
+    r.innerHTML = "Ruba";
+
+    r.style.left = Math.random() * window.innerWidth + "px";
+    r.style.animationDuration = (Math.random() * 5 + 4) + "s";
+    r.style.opacity = Math.random() * 0.8 + 0.2;
+
+    document.body.appendChild(r);
+
+    setTimeout(() => r.remove(), 8000);
+  }
+}
+
+/* START */
+startBtn.onclick = async () => {
+  startBtn.style.display = "none";
+
+  createRain(); // 🌧️ Ruba rain starts
+
+  loveText.style.display = "block";
+
+  try {
+    audio.currentTime = 0;
+    await audio.play();
+  } catch (e) {}
+
+  audio.onended = () => {
+    finished = true;
+    loveText.style.display = "none";
+    box.style.display = "block";
+  };
+};
+
+/* BOX CLICK */
+box.onclick = () => {
+  if (!finished) return;
+
+  box.style.display = "none";
+  finalText.style.display = "block";
+
+  for (let i = 0; i < 250; i++) {
+    let heart = document.createElement("div");
+    heart.className = "heart";
+    heart.innerHTML = "❤️";
+
+    heart.style.left = Math.random() * window.innerWidth + "px";
+    heart.style.top = Math.random() * window.innerHeight + "px";
+
+    document.body.appendChild(heart);
+
+    setTimeout(() => heart.remove(), 3000);
+  }
+};
+</script>
+
+</body>
+</html>
